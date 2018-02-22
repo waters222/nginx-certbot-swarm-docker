@@ -9,7 +9,8 @@ import (
 )
 
 
-var VERSION string
+var Version string
+var BuildTime string
 
 var outputPath string
 var templatePath string
@@ -35,7 +36,7 @@ func main(){
 		}
 	}()
 	if printVer{
-		fmt.Printf("Version is %s\n",VERSION)
+		fmt.Printf("Version: %s, BuildTime: %s\n", Version, BuildTime)
 		os.Exit(0)
 	}
 

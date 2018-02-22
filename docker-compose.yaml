@@ -1,7 +1,7 @@
 version: '3'
 services:
   nginx-proxy:
-    image:  nginx:mainline-alpine
+    image:  water258/swarm-nginx:latest
     ports:
       - "80:80"
       - "443:443"
