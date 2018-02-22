@@ -10,23 +10,26 @@ import (
 	"fmt"
 )
 const DOMAINS = "DOMAINS"
+const CERTBOT = "CERTBOT"
+
 const REGEX_DOMAIN = "^[a-z0-9]([a-z0-9-]+\\.){1,}[a-z0-9]+$"
 
 type Domain struct {
 	Domain 		string
 	Proxy 		string
-	Certbot  	string
+	Encryption	bool
 }
 type Domains struct{
+	Certbot string
 	Domains []Domain
 }
 
 type Certs struct{
-	Certbot string
 	Domains []string
 }
 
 func ParseDomains(certsConfigPath string)( ret *Domains, err error){
+
 	str := os.Getenv(DOMAINS)
 	domains := strings.Split(str, ",")
 	if len(domains) == 0{
@@ -50,12 +53,22 @@ func ParseDomains(certsConfigPath string)( ret *Domains, err error){
 			fmt.Printf("Invalid domain format for %s\n", temps[0])
 			continue
 		}
-		ret.Domains = append(ret.Domains, Domain{temps[0], temps[1], ""})
+		ret.Domains = append(ret.Domains, Domain{temps[0], temps[1], false})
+		fmt.Printf("[INFO] Add domain: %s, proxy: %s\n", temps[0], temps[1])
 	}
 	if len(ret.Domains) == 0{
 		return nil, errors.New("Domains is empty")
 	}
+	ret.Certbot = os.Getenv(CERTBOT)
+	if len(ret.Certbot) != 0{
+		fmt.Printf("[INFO] Certbot is enabled and passed to container: %s\n", ret.Certbot)
+	}else{
+		fmt.Printf("[INFO] Certbot is disabled\n")
+	}
 
+
+
+	//
 	var certs *Certs
 	if certs, err = parseCerts(certsConfigPath); err != nil{
 		fmt.Printf("[INFO] Can not parse certificate config files, so no SSL encryption, %s\n", err.Error())
@@ -64,10 +77,13 @@ func ParseDomains(certsConfigPath string)( ret *Domains, err error){
 	for i := 0; i < len(ret.Domains); i++{
 		for _, dd := range certs.Domains{
 			if strings.Compare(ret.Domains[i].Domain, dd) == 0 {
-				ret.Domains[i].Certbot = certs.Certbot
+				fmt.Printf("[INFO] Set domain: %s encryption to TRUE\n", ret.Domains[i].Domain)
+				ret.Domains[i].Encryption = true
 			}
 		}
 	}
+
+
 	return ret, nil
 }
 

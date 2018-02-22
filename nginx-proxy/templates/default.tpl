@@ -8,7 +8,7 @@ proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
 proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
 proxy_set_header X-Forwarded-Ssl $proxy_x_forwarded_ssl;
 proxy_set_header X-Forwarded-Port $proxy_x_forwarded_port;
-# Mitigate httpoxy attack (see README for details)
+# Mitigate httpoxy attack
 proxy_set_header Proxy "";
 
 client_max_body_size        10m;
@@ -19,33 +19,27 @@ proxy_connect_timeout       90;
 proxy_send_timeout          90;
 proxy_read_timeout          90;
 
-
-{{range .Domains}}
-    {{if len .Certbot | eq 0}}
+{{$p := .Certbot}}
+{{ range .Domains}}
+    {{ if gt (len $p) 0 }}
         server{
             server_name {{.Domain}};
             listen 80;
-
-            location / {
-                proxy_pass {{.Proxy}};
-            }
-
-            access_log /var/log/nginx/access.log vhost;
-        }
-    {{else}}
-        server{
-            server_name {{.Domain}};
-            listen 80;
-            location /.well-known/acme-challenge/ {
-                proxy_pass {{.Certbot}};
-                break;
-            }
-
-            return 301 https://$host$request_uri;
+            {{ if .Encryption }}
+                location /.well-known/acme-challenge/ {
+                    proxy_pass {{$p}};
+                    break;
+                }
+                return 301 https://$host$request_uri;
+            {{ else }}
+                location / {
+                    proxy_pass {{.Proxy}};
+                }
+            {{ end }}
 
             access_log /var/log/nginx/access.log vhost;
         }
-
+        {{ if .Encryption }}
         server {
             server_name {{.Domain}};
             listen 443 ssl http2;
@@ -66,6 +60,19 @@ proxy_read_timeout          90;
 
             access_log /var/log/nginx/access.log vhost;
         }
-    {{end}}
+        {{ end }}
+
+    {{ else }}
+        server{
+            server_name {{.Domain}};
+            listen 80;
+
+            location / {
+                proxy_pass {{.Proxy}};
+            }
+
+            access_log /var/log/nginx/access.log vhost;
+        }
+    {{ end }}
 {{end}}
 

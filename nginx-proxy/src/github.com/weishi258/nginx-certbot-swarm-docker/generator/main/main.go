@@ -4,7 +4,7 @@ import (
 	"flag"
 	"os"
 	"fmt"
-	. "github.com/weishi258/nginx-certbot-swarm-docker/config"
+	. "github.com/weishi258/nginx-certbot-swarm-docker/generator/config"
 	. "text/template"
 )
 
@@ -13,7 +13,6 @@ var VERSION string
 
 var outputPath string
 var templatePath string
-var domainConfigPath string
 var certificateConfigPath string
 
 func main(){
@@ -22,7 +21,7 @@ func main(){
 
 	var printVer bool
 
-	flag.BoolVar(&printVer, "version", false, "print server version")
+	flag.BoolVar(&printVer, "version", false, "print generator version")
 	flag.StringVar(&outputPath, "out", "/etc/nginx/config.d/default.conf", "nginx proxy config output path")
 	flag.StringVar(&templatePath, "template", "/app/templates/default.tpl", "template path")
 	flag.StringVar(&certificateConfigPath, "certs", "/etc/letsencrypt/certs.json", "certificates config path")
