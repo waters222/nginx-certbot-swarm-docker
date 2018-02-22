@@ -1,0 +1,18 @@
+version: '3'
+services:
+  nginx-proxy:
+    image:  nginx:mainline-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      - DOMAINS=test.local=usermgr:8111,whoami.local=usermgr:8111
+    volumes:
+      - ./temp/gen:/etc/nginx/gen:rw
+      - ./temp/vhost.d:/etc/nginx/vhost.d:rw
+      - ./temp/html:/usr/share/nginx/html:rw
+      - ./temp/letsencrypt:/etc/letsencrypt:rw
+networks:
+  default:
+    external:
+      name: test_default
