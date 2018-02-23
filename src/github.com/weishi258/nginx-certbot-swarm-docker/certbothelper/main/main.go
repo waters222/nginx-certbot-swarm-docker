@@ -10,6 +10,7 @@ import (
 	gen "github.com/weishi258/nginx-certbot-swarm-docker/generator/config"
 	. "github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/config"
 	"os/exec"
+	"strconv"
 )
 
 
@@ -21,6 +22,12 @@ var sigChan chan os.Signal
 
 var certificateConfigPath string
 var staging bool
+var email string
+
+const (
+	EMAIL = "EMAIL"
+	STAGING = "STAGING"
+)
 func main() {
 	// waiting loop for signal
 	sigChan = make(chan os.Signal, 5)
@@ -40,7 +47,6 @@ func main() {
 	flag.BoolVar(&printVer, "version", false, "print watcher version")
 	flag.IntVar(&interval, "interval", 60, "file modify watcher interval in seconds")
 	flag.StringVar(&certificateConfigPath, "certs", "/etc/letsencrypt/certs.json", "certificates config path")
-	flag.BoolVar(&staging, "staging", false, "if is using staging certbot")
 	flag.Parse()
 
 	defer func() {
@@ -54,7 +60,14 @@ func main() {
 		fmt.Printf("Version: %s, BuildTime: %s\n", Version, BuildTime)
 		os.Exit(0)
 	}
-
+	email = os.Getenv(EMAIL)
+	if len(email) == 0{
+		fmt.Printf("[ERROR] Email address empty\n")
+		os.Exit(1)
+	}
+	if staging, err = strconv.ParseBool(os.Getenv(STAGING)); err != nil{
+		fmt.Printf("[INFO] Staging env variable parse error %s\n", os.Getenv(STAGING))
+	}
 	// make sure it always positive
 	if interval <= 0{
 		interval = 1
@@ -106,7 +119,12 @@ func process(){
 	}
 	if len(sslNeedDomainsIdx) > 0{
 		// populate domains string list
-		certbotArgs := make([]string, 0)
+		certbotArgs := make([]string, 4)
+		certbotArgs[0] = "certonly"
+		certbotArgs[1] = "-m"
+		certbotArgs[2] = email
+		certbotArgs[3] = "--agree-tos"
+
 		if staging{
 			certbotArgs = append(certbotArgs, "--staging")
 		}

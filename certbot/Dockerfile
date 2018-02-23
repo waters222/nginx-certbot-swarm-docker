@@ -1,7 +1,14 @@
-FROM certbot/certbot AS build
+FROM golang:1.9.3-alpine AS build
+ARG GIT_HEAD
+ENV GIT_HEAD ${GIT_HEAD}
+COPY src /go/src
+WORKDIR /go
+RUN CGO_ENABLED=0 GOOS=linux go build -a -ldflags "-X main.BuildTime=`date -u '+%Y-%m-%d_%I:%M:%S%p'` -X main.Version=$GIT_HEAD"  -o certbotHelper src/github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/main/main.go
 
-# Install tools required to build the project
-# We will need to run `docker build --no-cache .` to update those dependencies
-WORKDIR app
-COPY    certbot/entrypoint.py entrypoint.py
-ENTRYPOINT ["python", "entrypoint.py"]
+
+FROM certbot/certbot
+ENV TZ=Asia/Shanghai
+WORKDIR /app
+COPY --from=build /go/certbotHelper .
+RUN chmod +x /app/certbotHelper
+ENTRYPOINT ["/app/certbotHelper", "-certs", "/etc/letsencrypt/certs.json"]

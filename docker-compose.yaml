@@ -18,6 +18,17 @@ services:
       - ./temp/letsencrypt:/etc/letsencrypt:ro
     depends_on:
       - nginx-test
+  certbot:
+    image:  test-certbot
+    environment:
+      - DOMAINS=test.local.com
+      - EMAIL=wei.shi@boxinholding.com
+      - STAGING=True
+    volumes:
+      - ./temp/html:/usr/share/nginx/html:rw
+      - ./temp/letsencrypt:/etc/letsencrypt:rw
+    depends_on:
+      - nginx-proxy
 
 
 networks:
