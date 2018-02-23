@@ -5,6 +5,7 @@ import signal
 import sys
 
 
+
 def signal_handler(signal, frame):
     print "INFO: Exit Certbot Python Script"
     sys.exit(0)
@@ -35,6 +36,7 @@ print "INFO: start processing domains: "+', '.join(domains)
 signal.signal(signal.SIGINT, signal_handler)
 
 while True:
+
     time.sleep(60)
 
 

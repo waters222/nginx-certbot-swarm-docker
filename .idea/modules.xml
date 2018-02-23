@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/nginx-certbot-swarm-docker.iml" filepath="$PROJECT_DIR$/.idea/nginx-certbot-swarm-docker.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/nginx-proxy.iml" filepath="$PROJECT_DIR$/.idea/nginx-proxy.iml" />
     </modules>
   </component>
 </project>
