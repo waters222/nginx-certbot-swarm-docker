@@ -138,11 +138,12 @@ func process(){
 	if len(sslNeedDomainsIdx) > 0{
 
 		// populate domains string list
-		certbotArgs := make([]string, 4)
+		certbotArgs := make([]string, 5)
 		certbotArgs[0] = "certonly"
 		certbotArgs[1] = "-m"
 		certbotArgs[2] = email
 		certbotArgs[3] = "--agree-tos"
+		certbotArgs[5] = "--non-interactive"
 
 		if staging{
 			certbotArgs = append(certbotArgs, "--staging")
@@ -151,9 +152,9 @@ func process(){
 		certbotArgs = append(certbotArgs, "--webroot")
 		certbotArgs = append(certbotArgs, "-w")
 		certbotArgs = append(certbotArgs, "/usr/share/nginx/html")
-		certbotArgs = append(certbotArgs, "-d")
 
 		for _, idx := range sslNeedDomainsIdx{
+			certbotArgs = append(certbotArgs, "-d")
 			certbotArgs = append(certbotArgs, certs.Domains[idx].Domain)
 		}
 

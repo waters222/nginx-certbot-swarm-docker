@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="c8efadf5-13fe-4ee4-b5a7-764790ca8201" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change beforePath="$PROJECT_DIR$/src/github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/main/main.go" afterPath="$PROJECT_DIR$/src/github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/main/main.go" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -13,11 +13,24 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="README.md" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/README.md">
+          <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+            <state split_layout="SPLIT">
+              <first_editor relative-caret-position="120">
+                <caret line="8" column="3" lean-forward="true" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
+                <folding />
+              </first_editor>
+              <second_editor />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="default.tpl" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/templates/default.tpl">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1032">
-              <caret line="75" column="0" lean-forward="true" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
+            <state relative-caret-position="345">
+              <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -56,8 +69,8 @@
       <file leaf-file-name="main.go" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/main/main.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="150" column="54" lean-forward="true" selection-start-line="150" selection-start-column="54" selection-end-line="150" selection-end-column="54" />
+            <state relative-caret-position="251">
+              <caret line="140" column="39" lean-forward="false" selection-start-line="140" selection-start-column="39" selection-end-line="140" selection-end-column="39" />
               <folding>
                 <element signature="e#14#245#0" expanded="true" />
               </folding>
@@ -92,16 +105,6 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="210">
               <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="Dockerfile" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/nginx-proxy/Dockerfile">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
-              <caret line="10" column="12" lean-forward="false" selection-start-line="10" selection-start-column="12" selection-end-line="10" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -195,9 +198,9 @@
         <option value="$PROJECT_DIR$/certbot/Dockerfile" />
         <option value="$PROJECT_DIR$/docker-compose.yaml" />
         <option value="$PROJECT_DIR$/temp/docker.yaml" />
-        <option value="$PROJECT_DIR$/src/github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/main/main.go" />
         <option value="$PROJECT_DIR$/src/github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/config/config.go" />
         <option value="$PROJECT_DIR$/templates/default.tpl" />
+        <option value="$PROJECT_DIR$/src/github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/main/main.go" />
       </list>
     </option>
   </component>
@@ -296,64 +299,6 @@
               <item name="weishi258" type="462c0819:PsiDirectoryNode" />
               <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
               <item name="certbothelper" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="nginx-certbot-swarm-docker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="github.com" type="462c0819:PsiDirectoryNode" />
-              <item name="weishi258" type="462c0819:PsiDirectoryNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="certbothelper" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="nginx-certbot-swarm-docker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="github.com" type="462c0819:PsiDirectoryNode" />
-              <item name="weishi258" type="462c0819:PsiDirectoryNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="generator" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="nginx-certbot-swarm-docker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="github.com" type="462c0819:PsiDirectoryNode" />
-              <item name="weishi258" type="462c0819:PsiDirectoryNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="generator" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="nginx-certbot-swarm-docker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="github.com" type="462c0819:PsiDirectoryNode" />
-              <item name="weishi258" type="462c0819:PsiDirectoryNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="generator" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="nginx-certbot-swarm-docker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="github.com" type="462c0819:PsiDirectoryNode" />
-              <item name="weishi258" type="462c0819:PsiDirectoryNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="watcher" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="nginx-certbot-swarm-docker" type="b2602c69:ProjectViewProjectNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="github.com" type="462c0819:PsiDirectoryNode" />
-              <item name="weishi258" type="462c0819:PsiDirectoryNode" />
-              <item name="nginx-certbot-swarm-docker" type="462c0819:PsiDirectoryNode" />
-              <item name="watcher" type="462c0819:PsiDirectoryNode" />
               <item name="main" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -417,9 +362,8 @@
       <go_parameters value="-i" />
       <parameters value="-interval 5" />
       <envs>
-        <env name="DOMAINS" value="test.local" />
+        <env name="DOMAINS" value="www.toppers.com.cn,api.toppers.com.cn" />
         <env name="EMAIL" value="wei.shi@boxinholding.com" />
-        <env name="STAGING" value="True" />
       </envs>
       <kind value="FILE" />
       <filePath value="$PROJECT_DIR$/src/github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/main/main.go" />
@@ -621,14 +565,13 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="121" y="23" width="2375" height="1392" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25417918" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299923" sideWeight="0.5015002" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299923" sideWeight="0.49849978" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3299923" sideWeight="0.49849978" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299923" sideWeight="0.49849978" order="7" side_tool="false" content_ui="tabs" />
@@ -905,17 +848,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="105">
-            <caret line="7" column="83" lean-forward="true" selection-start-line="7" selection-start-column="63" selection-end-line="7" selection-end-column="83" />
-            <folding />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docker-compose.yaml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
@@ -982,6 +914,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/templates/default.tpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="345">
+          <caret line="23" column="0" lean-forward="true" selection-start-line="23" selection-start-column="0" selection-end-line="23" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/temp/docker.yaml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="465">
@@ -990,18 +930,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/templates/default.tpl">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1032">
-          <caret line="75" column="0" lean-forward="true" selection-start-line="75" selection-start-column="0" selection-end-line="75" selection-end-column="0" />
-          <folding />
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="120">
+            <caret line="8" column="3" lean-forward="true" selection-start-line="8" selection-start-column="3" selection-end-line="8" selection-end-column="3" />
+            <folding />
+          </first_editor>
+          <second_editor />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/main/main.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="380">
-          <caret line="150" column="54" lean-forward="true" selection-start-line="150" selection-start-column="54" selection-end-line="150" selection-end-column="54" />
+        <state relative-caret-position="251">
+          <caret line="140" column="39" lean-forward="false" selection-start-line="140" selection-start-column="39" selection-end-line="140" selection-end-column="39" />
           <folding>
             <element signature="e#14#245#0" expanded="true" />
           </folding>
