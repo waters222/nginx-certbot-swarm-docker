@@ -18,14 +18,18 @@ type Domain struct {
 	Domain 		string
 	Proxy 		string
 	Encryption	bool
+	SslReady 	bool
 }
 type Domains struct{
 	Certbot string
 	Domains []Domain
 }
-
+type Cert struct{
+	Domain 		string
+	SslReady 	bool
+}
 type Certs struct{
-	Domains []string
+	Domains []Cert
 }
 
 func ParseDomains(certsConfigPath string)( ret *Domains, err error){
@@ -53,7 +57,7 @@ func ParseDomains(certsConfigPath string)( ret *Domains, err error){
 			fmt.Printf("Invalid domain format for %s\n", temps[0])
 			continue
 		}
-		ret.Domains = append(ret.Domains, Domain{temps[0], temps[1], false})
+		ret.Domains = append(ret.Domains, Domain{temps[0], temps[1], false, false})
 		fmt.Printf("[INFO] Add domain: %s, proxy: %s\n", temps[0], temps[1])
 	}
 	if len(ret.Domains) == 0{
@@ -76,9 +80,10 @@ func ParseDomains(certsConfigPath string)( ret *Domains, err error){
 	}
 	for i := 0; i < len(ret.Domains); i++{
 		for _, dd := range certs.Domains{
-			if strings.Compare(ret.Domains[i].Domain, dd) == 0 {
+			if strings.Compare(ret.Domains[i].Domain, dd.Domain) == 0 {
 				fmt.Printf("[INFO] Set domain: %s encryption to TRUE\n", ret.Domains[i].Domain)
 				ret.Domains[i].Encryption = true
+				ret.Domains[i].SslReady = dd.SslReady
 			}
 		}
 	}

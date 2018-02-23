@@ -12,3 +12,8 @@ WORKDIR /app
 COPY --from=build /go/generator .
 COPY --from=build /go/watcher .
 COPY nginx-proxy/templates /app/templates
+COPY nginx-proxy/entrypoint/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+EXPOSE 80
+EXPOSE 443
+CMD ["/app/entrypoint.sh"]

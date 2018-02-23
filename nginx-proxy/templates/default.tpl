@@ -2,12 +2,8 @@ proxy_http_version 1.1;
 proxy_buffering off;
 proxy_set_header Host $http_host;
 proxy_set_header Upgrade $http_upgrade;
-proxy_set_header Connection $proxy_connection;
 proxy_set_header X-Real-IP $remote_addr;
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-proxy_set_header X-Forwarded-Proto $proxy_x_forwarded_proto;
-proxy_set_header X-Forwarded-Ssl $proxy_x_forwarded_ssl;
-proxy_set_header X-Forwarded-Port $proxy_x_forwarded_port;
 # Mitigate httpoxy attack
 proxy_set_header Proxy "";
 
@@ -19,6 +15,20 @@ proxy_connect_timeout       90;
 proxy_send_timeout          90;
 proxy_read_timeout          90;
 
+
+server {
+    listen      80;
+    server_name "";
+    return      444;
+}
+
+server {
+    listen      443;
+    server_name "";
+    return      444;
+}
+
+
 {{$p := .Certbot}}
 {{ range .Domains}}
     {{ if gt (len $p) 0 }}
@@ -27,39 +37,44 @@ proxy_read_timeout          90;
             listen 80;
             {{ if .Encryption }}
                 location /.well-known/acme-challenge/ {
-                    proxy_pass {{$p}};
+                    auth_basic off;
+                    allow all;
+                    root /usr/share/nginx/html;
+                    try_files $uri =404;
                     break;
                 }
-                return 301 https://$host$request_uri;
+                location / {
+                    return 301 https://$host$request_uri;
+                }
             {{ else }}
                 location / {
-                    proxy_pass {{.Proxy}};
+                    proxy_pass http://{{.Proxy}};
                 }
             {{ end }}
 
-            access_log /var/log/nginx/access.log vhost;
+            access_log /var/log/nginx/access.log main;
         }
-        {{ if .Encryption }}
-        server {
-            server_name {{.Domain}};
-            listen 443 ssl http2;
+        {{ if .SslReady }}
+            server {
+                server_name {{.Domain}};
+                listen 443 ssl http2;
 
-            ssl_certificate /etc/letsencrypt/live/{{.Domain}}/fullchain.pem;
-            ssl_certificate_key /etc/letsencrypt/live/{{.Domain}}/privkey.pem;
-            include /etc/letsencrypt/options-ssl-nginx.conf;
-            ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
+                ssl_certificate /etc/letsencrypt/live/{{.Domain}}/fullchain.pem;
+                ssl_certificate_key /etc/letsencrypt/live/{{.Domain}}/privkey.pem;
+                include /etc/letsencrypt/options-ssl-nginx.conf;
+                ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
-            include /etc/nginx/vhost.d/{{.Domain}}.conf;
-            location / {
-                    proxy_pass {{.Proxy}}
+                include /etc/nginx/vhost.d/{{.Domain}}*.conf;
+                location / {
+                        proxy_pass http://{{.Proxy}};
+                }
+
+                if ($scheme != "https") {
+                        return 301 https://$host$request_uri;
+                } # managed by Certbot
+
+                access_log /var/log/nginx/access.log main;
             }
-
-            if ($scheme != "https") {
-                    return 301 https://$host$request_uri;
-            } # managed by Certbot
-
-            access_log /var/log/nginx/access.log vhost;
-        }
         {{ end }}
 
     {{ else }}
@@ -68,10 +83,10 @@ proxy_read_timeout          90;
             listen 80;
 
             location / {
-                proxy_pass {{.Proxy}};
+                proxy_pass http://{{.Proxy}};
             }
 
-            access_log /var/log/nginx/access.log vhost;
+            access_log /var/log/nginx/access.log main;
         }
     {{ end }}
 {{end}}

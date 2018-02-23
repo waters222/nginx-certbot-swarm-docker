@@ -48,12 +48,12 @@ func main() {
 
 	flag.BoolVar(&printVer, "version", false, "print watcher version")
 	flag.IntVar(&interval, "interval", 1, "file modify watcher interval in seconds")
-	flag.StringVar(&outputPath, "out", "/etc/nginx/config.d/default.conf", "nginx proxy config output path")
+	flag.StringVar(&outputPath, "out", "/etc/nginx/conf.d/default.conf", "nginx proxy config output path")
 	flag.StringVar(&templatePath, "template", "/app/templates/default.tpl", "template path")
 	flag.StringVar(&certificateConfigPath, "certs", "/etc/letsencrypt/certs.json", "certificates config path")
 
 	flag.StringVar(&generatorPath, "generator", "/app/generator", "generator app path")
-	flag.StringVar(&nginxReload, "nginx", "nginx -s reload", "nginx reload command")
+	flag.StringVar(&nginxReload, "nginx", "nginx -s reload", "/usr/sbin/nginx reload command")
 	flag.Parse()
 
 	defer func() {

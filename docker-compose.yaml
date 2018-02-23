@@ -1,17 +1,25 @@
 version: '3'
 services:
+  nginx-test:
+    image:  nginx:mainline-alpine
+    volumes:
+      - ./temp/html:/usr/share/nginx/html:ro
   nginx-proxy:
-    image:  water258/swarm-nginx:latest
+    image:  test-nginx-proxy
     ports:
       - "80:80"
       - "443:443"
     environment:
-      - DOMAINS=test.local=usermgr:8111,whoami.local=usermgr:8111
+      - DOMAINS=test.local=nginx-test
+      - CERTBOT=nginx-test
     volumes:
-      - ./temp/gen:/etc/nginx/gen:rw
-      - ./temp/vhost.d:/etc/nginx/vhost.d:rw
-      - ./temp/html:/usr/share/nginx/html:rw
-      - ./temp/letsencrypt:/etc/letsencrypt:rw
+      - ./temp/vhost.d:/etc/nginx/vhost.d:ro
+      - ./temp/html:/usr/share/nginx/html:ro
+      - ./temp/letsencrypt:/etc/letsencrypt:ro
+    depends_on:
+      - nginx-test
+
+
 networks:
   default:
     external:
