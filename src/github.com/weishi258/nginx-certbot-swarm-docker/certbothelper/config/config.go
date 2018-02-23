@@ -37,7 +37,7 @@ func GetCertConfig(certsConfigPath string)( ret *gen.Certs, bRefresh bool, err e
 	// lets do compare
 	sameCount := 0
 	for i := 0; i < len(ret.Domains); i++{
-		ret.Domains[i].Domain = domains.Domains[0]
+		ret.Domains[i].Domain = domains.Domains[i]
 		for _, elem := range certs.Domains{
 			if strings.Compare(ret.Domains[i].Domain, elem.Domain) == 0{
 				ret.Domains[i].SslReady = elem.SslReady
