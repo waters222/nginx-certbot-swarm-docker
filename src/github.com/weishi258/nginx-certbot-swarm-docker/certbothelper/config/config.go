@@ -25,7 +25,7 @@ func GetCertConfig(certsConfigPath string)( ret *gen.Certs, bRefresh bool, err e
 	ret = &gen.Certs{}
 	ret.Domains = make([]gen.Cert, len(domains.Domains))
 	for i := 0; i < len(ret.Domains); i++{
-		ret.Domains[i].Domain = domains.Domains[0]
+		ret.Domains[i].Domain = domains.Domains[i]
 	}
 
 	var certs *gen.Certs
