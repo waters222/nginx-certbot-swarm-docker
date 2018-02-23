@@ -1,1 +1,165 @@
 package main
+
+import (
+	"os"
+	"os/signal"
+	"syscall"
+	"flag"
+	"fmt"
+	"time"
+	gen "github.com/weishi258/nginx-certbot-swarm-docker/generator/config"
+	. "github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/config"
+	"os/exec"
+)
+
+
+var Version string
+var BuildTime string
+
+var interval int
+var sigChan chan os.Signal
+
+var certificateConfigPath string
+var staging bool
+func main() {
+	// waiting loop for signal
+	sigChan = make(chan os.Signal, 5)
+	done := make(chan bool)
+
+	signal.Notify(sigChan,
+		syscall.SIGHUP,
+		syscall.SIGKILL,
+		syscall.SIGQUIT,
+		syscall.SIGTERM,
+		syscall.SIGINT)
+
+	var err error
+
+	var printVer bool
+
+	flag.BoolVar(&printVer, "version", false, "print watcher version")
+	flag.IntVar(&interval, "interval", 60, "file modify watcher interval in seconds")
+	flag.StringVar(&certificateConfigPath, "certs", "/etc/letsencrypt/certs.json", "certificates config path")
+	flag.BoolVar(&staging, "staging", false, "if is using staging certbot")
+	flag.Parse()
+
+	defer func() {
+		if err != nil {
+			os.Exit(1)
+		} else {
+			os.Exit(0)
+		}
+	}()
+	if printVer {
+		fmt.Printf("Version: %s, BuildTime: %s\n", Version, BuildTime)
+		os.Exit(0)
+	}
+
+	// make sure it always positive
+	if interval <= 0{
+		interval = 1
+	}
+
+	duration := time.Duration(interval) * time.Second
+
+	timer := time.NewTimer(duration)
+
+	process()
+
+	go func(){
+		for range timer.C{
+			process()
+			timer.Reset(duration)
+		}
+	}()
+
+
+
+	go func() {
+		sig := <-sigChan
+		fmt.Printf("[INFO] CertbotHelper caught signal %v for exit", sig)
+		timer.Stop()
+		done <- true
+	}()
+	<-done
+}
+
+
+func process(){
+	var err error
+	var bRefresh bool
+	var certs *gen.Certs
+	if certs, bRefresh, err = GetCertConfig(certificateConfigPath); err != nil{
+		fmt.Printf("[ERROR] Failed to process domains, %s\n", err.Error())
+		return
+	}
+
+	sslNeedDomainsIdx := make([]int, 0)
+	sslReadyDomainsIdx := make([]int, 0)
+
+	for i := 0; i < len(certs.Domains); i++{
+		if certs.Domains[i].SslReady{
+			sslReadyDomainsIdx = append(sslReadyDomainsIdx, i)
+		}else{
+			sslNeedDomainsIdx = append(sslNeedDomainsIdx, i)
+		}
+	}
+	if len(sslNeedDomainsIdx) > 0{
+		// populate domains string list
+		certbotArgs := make([]string, 0)
+		if staging{
+			certbotArgs = append(certbotArgs, "--staging")
+		}
+		certbotArgs = append(certbotArgs, "--webroot")
+		certbotArgs = append(certbotArgs, "-w")
+		certbotArgs = append(certbotArgs, "/usr/share/nginx/html")
+		certbotArgs = append(certbotArgs, "-d")
+
+		for _, idx := range sslNeedDomainsIdx{
+			certbotArgs = append(certbotArgs, certs.Domains[idx].Domain)
+		}
+
+		//cmd := exec.Command("certbot","-webroot", "-w", "/usr/share/nginx/html", "-d", sslNeedDomains...)
+		cmd := exec.Command("certbot", certbotArgs...)
+		if consoleOut, err := cmd.Output(); err != nil{
+			fmt.Printf("[ERROR] Exec certbot failed, %s\n", err.Error())
+			fmt.Printf("%s",consoleOut)
+		}else{
+			bRefresh = true
+			fmt.Printf("%s",consoleOut)
+			for _, idx := range sslNeedDomainsIdx{
+
+				certs.Domains[idx].SslReady = true
+			}
+		}
+	}
+	if len(sslReadyDomainsIdx) > 0{
+		certbotArgs := make([]string, 0)
+		if staging{
+			certbotArgs = append(certbotArgs, "--staging")
+		}
+		certbotArgs = append(certbotArgs, "renew")
+		if bRefresh{
+			certbotArgs = append(certbotArgs, "--post-hook")
+			certbotArgs = append(certbotArgs, fmt.Sprintf("touch %s", certificateConfigPath))
+		}
+		cmd := exec.Command("certbot", certbotArgs...)
+		if consoleOut, err := cmd.Output(); err != nil{
+			fmt.Printf("[ERROR] Exec certbot renew failed, %s\n", err.Error())
+			fmt.Printf("%s",consoleOut)
+			return
+		}else{
+			fmt.Printf("%s",consoleOut)
+		}
+	}
+	if bRefresh{
+		if err = WriteCerts(certificateConfigPath, certs); err != nil{
+			fmt.Printf("[ERROR] Write to certificate file failed %s, %s\n", certificateConfigPath, err.Error())
+		}else{
+			fmt.Printf("[INFO] Write to certificate file %s successful\n", certificateConfigPath)
+		}
+	}
+
+
+
+}

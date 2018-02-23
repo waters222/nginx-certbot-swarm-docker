@@ -74,7 +74,7 @@ func ParseDomains(certsConfigPath string)( ret *Domains, err error){
 
 	//
 	var certs *Certs
-	if certs, err = parseCerts(certsConfigPath); err != nil{
+	if certs, err = ParseCerts(certsConfigPath); err != nil{
 		fmt.Printf("[INFO] Can not parse certificate config files, so no SSL encryption, %s\n", err.Error())
 		return ret, nil
 	}
@@ -92,7 +92,7 @@ func ParseDomains(certsConfigPath string)( ret *Domains, err error){
 	return ret, nil
 }
 
-func parseCerts(path string)( ret *Certs, err error){
+func ParseCerts(path string)( ret *Certs, err error){
 	file, err := os.Open(path) // For read access.
 	if err != nil {
 		return nil, errors.Wrapf(err, "Open certificates config file %s failed", path)

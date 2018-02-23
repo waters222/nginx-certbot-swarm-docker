@@ -95,7 +95,7 @@ func main() {
 
 	go func() {
 		sig := <-sigChan
-		fmt.Printf("Watcher caught signal %v for exit", sig)
+		fmt.Printf("[INFO] Watcher caught signal %v for exit", sig)
 		timer.Stop()
 		done <- true
 	}()
@@ -112,7 +112,7 @@ func process(){
 		fmt.Printf("[INFO] Certificates config %s modified from %v to %v\n", certificateConfigPath, certsModifed, _certsModifed)
 		cmd := exec.Command(generatorPath, "-out", outputPath, "-certs", certificateConfigPath, "-template", templatePath)
 		if consoleOut, err := cmd.Output(); err != nil{
-			fmt.Printf("Exec generator failed, %s\n", err.Error())
+			fmt.Printf("[ERROR] Exec generator failed, %s\n", err.Error())
 			fmt.Printf("%s",consoleOut)
 			return
 		}else{
@@ -131,7 +131,7 @@ func process(){
 		}
 
 		if consoleOut, err := cmd.Output(); err != nil{
-			fmt.Printf("Exec nginx reload failed, %s\n", err.Error())
+			fmt.Printf("[ERROR] Exec nginx reload failed, %s\n", err.Error())
 			fmt.Printf("%s",consoleOut)
 			return
 		}else{
