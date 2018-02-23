@@ -143,7 +143,7 @@ func process(){
 		certbotArgs[1] = "-m"
 		certbotArgs[2] = email
 		certbotArgs[3] = "--agree-tos"
-		certbotArgs[5] = "--non-interactive"
+		certbotArgs[4] = "--non-interactive"
 
 		if staging{
 			certbotArgs = append(certbotArgs, "--staging")
