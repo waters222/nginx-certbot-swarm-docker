@@ -22,12 +22,6 @@ server {
     return      444;
 }
 
-server {
-    listen      443;
-    server_name "";
-    return      444;
-}
-
 
 {{$p := .Certbot}}
 {{ range .Domains}}
@@ -58,11 +52,9 @@ server {
             server {
                 server_name {{.Domain}};
                 listen 443 ssl http2;
-
+                ssl on;
                 ssl_certificate /etc/letsencrypt/live/{{.Domain}}/fullchain.pem;
                 ssl_certificate_key /etc/letsencrypt/live/{{.Domain}}/privkey.pem;
-                include /etc/letsencrypt/options-ssl-nginx.conf;
-                ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem;
 
                 include /etc/nginx/vhost.d/{{.Domain}}*.conf;
                 location / {

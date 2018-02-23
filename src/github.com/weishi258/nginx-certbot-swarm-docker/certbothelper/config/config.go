@@ -47,7 +47,7 @@ func GetCertConfig(certsConfigPath string)( ret *gen.Certs, bRefresh bool, err e
 		}
 	}
 
-	return ret, sameCount == len(ret.Domains) && sameCount == len(certs.Domains), nil
+	return ret, !(sameCount == len(ret.Domains) && sameCount == len(certs.Domains)), nil
 }
 
 func WriteCerts(path string, certs *gen.Certs) error{

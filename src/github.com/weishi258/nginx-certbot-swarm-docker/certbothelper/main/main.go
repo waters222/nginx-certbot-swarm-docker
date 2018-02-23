@@ -27,6 +27,7 @@ var email string
 const (
 	EMAIL = "EMAIL"
 	STAGING = "STAGING"
+	PAUSING_TIME = 5
 )
 func main() {
 	// waiting loop for signal
@@ -45,7 +46,7 @@ func main() {
 	var printVer bool
 
 	flag.BoolVar(&printVer, "version", false, "print watcher version")
-	flag.IntVar(&interval, "interval", 60, "file modify watcher interval in seconds")
+	flag.IntVar(&interval, "interval", 3600, "file modify watcher interval in seconds")
 	flag.StringVar(&certificateConfigPath, "certs", "/etc/letsencrypt/certs.json", "certificates config path")
 	flag.Parse()
 
@@ -68,6 +69,12 @@ func main() {
 	if staging, err = strconv.ParseBool(os.Getenv(STAGING)); err != nil{
 		fmt.Printf("[INFO] Staging env variable parse error %s\n", os.Getenv(STAGING))
 	}
+	if staging{
+		fmt.Printf("[INFO] Certbot is in staging mode\n")
+	}else{
+		fmt.Printf("[INFO] Certbot is in production mode\n")
+	}
+
 	// make sure it always positive
 	if interval <= 0{
 		interval = 1
@@ -117,7 +124,19 @@ func process(){
 			sslNeedDomainsIdx = append(sslNeedDomainsIdx, i)
 		}
 	}
+	if bRefresh{
+		bRefresh = false
+		if err = WriteCerts(certificateConfigPath, certs); err != nil{
+			fmt.Printf("[ERROR] Write to certificate file failed %s, %s\n", certificateConfigPath, err.Error())
+		}else{
+			fmt.Printf("[INFO] Write to certificate file %s successful\n", certificateConfigPath)
+		}
+		time.Sleep(PAUSING_TIME * time.Second)
+		fmt.Printf("[INFO] Wait for %d seconds for nginx to pick up changes\n",PAUSING_TIME)
+
+	}
 	if len(sslNeedDomainsIdx) > 0{
+
 		// populate domains string list
 		certbotArgs := make([]string, 4)
 		certbotArgs[0] = "certonly"
@@ -128,6 +147,7 @@ func process(){
 		if staging{
 			certbotArgs = append(certbotArgs, "--staging")
 		}
+
 		certbotArgs = append(certbotArgs, "--webroot")
 		certbotArgs = append(certbotArgs, "-w")
 		certbotArgs = append(certbotArgs, "/usr/share/nginx/html")
