@@ -58,8 +58,8 @@ func main() {
 			os.Exit(0)
 		}
 	}()
+	fmt.Printf("[INFO] CertbotHelper Version: %s, BuildTime: %s\n", Version, BuildTime)
 	if printVer {
-		fmt.Printf("Version: %s, BuildTime: %s\n", Version, BuildTime)
 		os.Exit(0)
 	}
 	email = os.Getenv(EMAIL)

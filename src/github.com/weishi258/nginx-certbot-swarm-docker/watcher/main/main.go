@@ -63,8 +63,9 @@ func main() {
 			os.Exit(0)
 		}
 	}()
+
+	fmt.Printf("[INFO] Nginx Watcher Version: %s, BuildTime: %s\n", Version, BuildTime)
 	if printVer {
-		fmt.Printf("Version: %s, BuildTime: %s\n", Version, BuildTime)
 		os.Exit(0)
 	}
 
