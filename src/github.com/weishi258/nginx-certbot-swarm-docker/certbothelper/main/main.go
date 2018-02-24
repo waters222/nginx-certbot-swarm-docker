@@ -17,7 +17,7 @@ import (
 var Version string
 var BuildTime string
 
-var interval int
+var sleepInterval int
 var sigChan chan os.Signal
 
 var certificateConfigPath string
@@ -27,7 +27,8 @@ var email string
 const (
 	EMAIL = "EMAIL"
 	STAGING = "STAGING"
-	PAUSING_TIME = 5
+	PAUSING_TIME = 10
+	DEFAULT_SLEEP_INTERVAL = 3600
 )
 func main() {
 	// waiting loop for signal
@@ -46,7 +47,7 @@ func main() {
 	var printVer bool
 
 	flag.BoolVar(&printVer, "version", false, "print watcher version")
-	flag.IntVar(&interval, "interval", 3600, "file modify watcher interval in seconds")
+	flag.IntVar(&sleepInterval, "interval", DEFAULT_SLEEP_INTERVAL, "file modify watcher sleepInterval in seconds")
 	flag.StringVar(&certificateConfigPath, "certs", "/etc/letsencrypt/certs.json", "certificates config path")
 	flag.Parse()
 
@@ -76,11 +77,11 @@ func main() {
 	}
 
 	// make sure it always positive
-	if interval <= 0{
-		interval = 1
+	if sleepInterval <= 0{
+		sleepInterval = 1
 	}
 
-	duration := time.Duration(interval) * time.Second
+	duration := time.Duration(sleepInterval) * time.Second
 
 	timer := time.NewTimer(duration)
 
@@ -167,7 +168,6 @@ func process(){
 			bRefresh = true
 			fmt.Printf("%s",consoleOut)
 			for _, idx := range sslNeedDomainsIdx{
-
 				certs.Domains[idx].SslReady = true
 			}
 		}
@@ -198,7 +198,7 @@ func process(){
 			fmt.Printf("[INFO] Write to certificate file %s successful\n", certificateConfigPath)
 		}
 	}
-
+	fmt.Printf("[INFO] Sleep for %d seconds\n", sleepInterval)
 
 
 }
