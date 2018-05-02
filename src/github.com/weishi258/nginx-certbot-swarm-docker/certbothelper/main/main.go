@@ -11,6 +11,7 @@ import (
 	. "github.com/weishi258/nginx-certbot-swarm-docker/certbothelper/config"
 	"os/exec"
 	"strconv"
+	"sync"
 )
 
 
@@ -21,8 +22,12 @@ var sleepInterval int
 var sigChan chan os.Signal
 
 var certificateConfigPath string
+var certificateDirectory string
 var staging bool
 var email string
+
+
+
 
 const (
 	EMAIL = "EMAIL"
@@ -49,8 +54,11 @@ func main() {
 	flag.BoolVar(&printVer, "version", false, "print watcher version")
 	flag.IntVar(&sleepInterval, "interval", DEFAULT_SLEEP_INTERVAL, "file modify watcher sleepInterval in seconds")
 	flag.StringVar(&certificateConfigPath, "certs", "/etc/letsencrypt/certs.json", "certificates config path")
+	flag.StringVar(&certificateDirectory, "d", "/etc/letsencrypt/live", "certificates base directory")
 	flag.Parse()
-
+	if len(certificateDirectory) == 0{
+		certificateDirectory = "/etc/letsencrypt/live"
+	}
 	defer func() {
 		if err != nil {
 			os.Exit(1)
@@ -62,6 +70,8 @@ func main() {
 	if printVer {
 		os.Exit(0)
 	}
+
+
 	email = os.Getenv(EMAIL)
 	if len(email) == 0{
 		fmt.Printf("[ERROR] Email address empty\n")
@@ -80,16 +90,18 @@ func main() {
 	if sleepInterval <= 0{
 		sleepInterval = 1
 	}
+	certModTime := make(map[string]time.Time)
+	certModTimeMutex := &sync.Mutex{}
 
 	duration := time.Duration(sleepInterval) * time.Second
 
 	timer := time.NewTimer(duration)
 
-	process()
+	process(certModTime, certModTimeMutex)
 
 	go func(){
 		for range timer.C{
-			process()
+			process(certModTime, certModTimeMutex)
 			timer.Reset(duration)
 		}
 	}()
@@ -106,7 +118,7 @@ func main() {
 }
 
 
-func process(){
+func process(certModTime map[string]time.Time, certModeTimeMutex *sync.Mutex){
 	var err error
 	var bRefresh bool
 	var certs *gen.Certs
@@ -173,12 +185,33 @@ func process(){
 		}
 	}
 	if len(sslReadyDomainsIdx) > 0{
+		// lets check if certificate has been update recently
+		bNotifyNginxProxy := false
+		for _, cert := range certs.Domains {
+			if stat, err := os.Stat(fmt.Sprintf("%s/%s", certificateDirectory, cert.Domain)); err == nil{
+				lastModTime := stat.ModTime()
+				certModeTimeMutex.Lock()
+				if domainModTime, ok := certModTime[cert.Domain]; ok{
+					if lastModTime.After(domainModTime) {
+						certModTime[cert.Domain] = lastModTime
+						fmt.Printf("[INFO] Certificate for domain %s has changed", cert.Domain)
+						bNotifyNginxProxy = true
+					}
+				}else{
+					fmt.Printf("[INFO] Certificate for domain %s has added", cert.Domain)
+					certModTime[cert.Domain] = lastModTime
+					bNotifyNginxProxy = true
+				}
+				certModeTimeMutex.Unlock()
+			}
+		}
+
 		certbotArgs := make([]string, 0)
 		if staging{
 			certbotArgs = append(certbotArgs, "--staging")
 		}
 		certbotArgs = append(certbotArgs, "renew")
-		if bRefresh{
+		if bRefresh || bNotifyNginxProxy {
 			certbotArgs = append(certbotArgs, "--post-hook")
 			certbotArgs = append(certbotArgs, fmt.Sprintf("touch %s", certificateConfigPath))
 		}

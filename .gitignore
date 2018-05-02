@@ -1,5 +1,7 @@
 temp/
 docker-compose.yaml
 .idea/
+vendor/
 bin/
 pkg/
+.DS_Store

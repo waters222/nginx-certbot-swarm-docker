@@ -11,4 +11,4 @@ ENV TZ=Asia/Shanghai
 WORKDIR /app
 COPY --from=build /go/certbotHelper .
 RUN chmod +x /app/certbotHelper
-ENTRYPOINT ["/app/certbotHelper", "-certs", "/etc/letsencrypt/certs.json"]
+ENTRYPOINT ["/app/certbotHelper", "-certs", "/etc/letsencrypt/certs.json", "-d", "/etc/letsencrypt/live"]
